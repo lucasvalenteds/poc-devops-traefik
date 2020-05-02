@@ -11,8 +11,8 @@ services:
       - "--log.level=INFO"
       - "--providers.docker=true"
 
-  application:
-    image: application:latest
+  server:
+    image: server:latest
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -23,5 +23,5 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.port=3000"
-      - "traefik.backend=application"
-      - "traefik.http.routers.application.rule=Host(`localhost`)"
+      - "traefik.backend=server"
+      - "traefik.http.routers.server.rule=Host(`localhost`)"
