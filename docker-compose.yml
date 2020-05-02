@@ -14,7 +14,7 @@ services:
   application:
     image: application:latest
     build:
-      context: ./
+      context: ./server
       dockerfile: Dockerfile
     ports:
       - 3000

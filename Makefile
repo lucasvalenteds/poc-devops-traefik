@@ -3,8 +3,8 @@ API_URL = http://localhost:4000
 SCALE ?= 5
 
 up:
-	@npm install
-	@npm run build
+	@npm --prefix ./server install
+	@npm --prefix ./server run build
 	@docker-compose up --build --detach --scale $(SERVICE)=$(SCALE) --force-recreate
 
 down:
@@ -14,8 +14,4 @@ logs:
 	@docker-compose logs --follow $(SERVICE)
 
 test:
-	@npx autocannon \
-			--connections 30 \
-			--method GET \
-			--duration 30 \
-			$(API_URL)
+	@npx autocannon --connections 30 --method GET --duration 30 $(API_URL)
