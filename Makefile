@@ -1,5 +1,5 @@
 SERVICE = application
-API_URL = http://localhost:4000
+PROXY_URL = http://localhost:4000
 SCALE ?= 5
 
 up:
@@ -14,4 +14,4 @@ logs:
 	@docker-compose logs --follow $(SERVICE)
 
 test:
-	@npx autocannon --connections 30 --method GET --duration 30 $(API_URL)
+	@npx autocannon --connections 30 --method GET --duration 30 $(PROXY_URL)
