@@ -63,7 +63,7 @@
       ]
     },
     "rules": {
-        "@typescript-eslint/no-misused-promises": 0
+      "@typescript-eslint/no-misused-promises": 0
     }
   },
   "prettier": {
