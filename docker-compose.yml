@@ -4,7 +4,7 @@ services:
   proxy:
     image: traefik:v2.2
     ports:
-      - 80:80
+      - 4000:80
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command:
@@ -24,4 +24,4 @@ services:
       - "traefik.enable=true"
       - "traefik.port=3000"
       - "traefik.backend=application"
-      - "traefik.http.routers.application.rule=Host(`application.localhost`)"
+      - "traefik.http.routers.application.rule=Host(`localhost`)"

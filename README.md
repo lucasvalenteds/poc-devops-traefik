@@ -2,7 +2,7 @@
 
 It demonstrates how to use [Traefik](https://github.com/containous/traefik) to route requests to multiple [Node.js](https://nodejs.org) servers running on [Docker](https://github.com/docker) containers.
 
-We want Traefik to redirect HTTP requests from `http://application.localhost` to any running container.
+We want Traefik to redirect HTTP requests to `http://localhost:4000` to any running container.
 
 ## How to run
 

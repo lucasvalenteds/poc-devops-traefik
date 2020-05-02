@@ -1,5 +1,5 @@
 SERVICE = application
-API_URL = application.localhost
+API_URL = http://localhost:4000
 SCALE ?= 5
 
 up:
@@ -18,4 +18,4 @@ test:
 			--connections 30 \
 			--method GET \
 			--duration 30 \
-			http://$(API_URL)
+			$(API_URL)
