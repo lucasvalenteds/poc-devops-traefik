@@ -1,6 +1,6 @@
 # POC: Traefik
 
-It demonstrates how to use [Traefik](https://github.com/containous/traefik) to route requests to multiple [Node.js](https://nodejs.org) servers running on [Docker](https://github.com/docker) containers.
+It demonstrates how to use [Traefik](https://github.com/containous/traefik) to route requests to multiple [Node.js](https://github.com/nodejs) servers running on [Docker](https://github.com/docker) containers.
 
 We want Traefik to redirect HTTP requests to `http://localhost:4000` to any running container.
 
@@ -18,69 +18,57 @@ We want Traefik to redirect HTTP requests to `http://localhost:4000` to any runn
 ## Preview
 
 ```
-             Name                           Command               State            Ports         
--------------------------------------------------------------------------------------------------
-poc-node-traefik_server_1   docker-entrypoint.sh node  ...   Up      0.0.0.0:32868->3000/tcp
-poc-node-traefik_server_2   docker-entrypoint.sh node  ...   Up      0.0.0.0:32869->3000/tcp
-poc-node-traefik_server_3   docker-entrypoint.sh node  ...   Up      0.0.0.0:32870->3000/tcp
-poc-node-traefik_server_4   docker-entrypoint.sh node  ...   Up      0.0.0.0:32871->3000/tcp
-poc-node-traefik_server_5   docker-entrypoint.sh node  ...   Up      0.0.0.0:32867->3000/tcp
-poc-node-traefik_proxy_1         /entrypoint.sh --log.level ...   Up      0.0.0.0:4000->80/tcp   
+           Name                          Command               State            Ports         
+----------------------------------------------------------------------------------------------
+poc-devops-traefik_proxy_1    /entrypoint.sh --log.level ...   Up      0.0.0.0:4000->80/tcp   
+poc-devops-traefik_server_1   docker-entrypoint.sh node  ...   Up      0.0.0.0:32810->3000/tcp
+poc-devops-traefik_server_2   docker-entrypoint.sh node  ...   Up      0.0.0.0:32812->3000/tcp
+poc-devops-traefik_server_3   docker-entrypoint.sh node  ...   Up      0.0.0.0:32813->3000/tcp
+poc-devops-traefik_server_4   docker-entrypoint.sh node  ...   Up      0.0.0.0:32811->3000/tcp
+poc-devops-traefik_server_5   docker-entrypoint.sh node  ...   Up      0.0.0.0:32814->3000/tcp
 ```
 
 ```
-audited 1204528 packages in 5.675s
+audited 2 packages in 1.062s
+found 0 vulnerabilities
 
-32 packages are looking for funding
-  run `npm fund` for details
-
-found 1525 low severity vulnerabilities
-  run `npm audit fix` to fix them, or `npm audit` for details
+Creating network "poc-devops-traefik_default" with the default driver
 Building server
 Step 1/6 : FROM node:alpine
  ---> 0854fcfc1637
-Step 2/6 : WORKDIR /server
+Step 2/6 : WORKDIR /application
  ---> Using cache
- ---> 3ebe5043dbc4
+ ---> 6303181eba3a
 Step 3/6 : ENV PORT 3000
  ---> Using cache
- ---> 6e83a7b12729
+ ---> a77ba85570a7
 Step 4/6 : COPY dist/index.js .
- ---> Using cache
- ---> 8856a276e638
+ ---> 036ec9ca8ec2
 Step 5/6 : EXPOSE 3000
- ---> Using cache
- ---> 222c2974c154
+ ---> Running in 01f221da2262
+Removing intermediate container 01f221da2262
+ ---> fb0a7d5173ce
 Step 6/6 : CMD [ "node", "index.js" ]
- ---> Using cache
- ---> ee70b978b6af
+ ---> Running in d58ca2ef4501
+Removing intermediate container d58ca2ef4501
+ ---> 0c2bee211b66
 
-Successfully built ee70b978b6af
+Successfully built 0c2bee211b66
 Successfully tagged server:latest
-Recreating poc-node-traefik_proxy_1       ... done
-Recreating poc-node-traefik_server_1 ... done
-Recreating poc-node-traefik_server_2 ... done
-Recreating poc-node-traefik_server_3 ... done
-Recreating poc-node-traefik_server_4 ... done
-Recreating poc-node-traefik_server_5 ... done
+Creating poc-devops-traefik_proxy_1  ... done
+Creating poc-devops-traefik_server_1 ... done
+Creating poc-devops-traefik_server_2 ... done
+Creating poc-devops-traefik_server_3 ... done
+Creating poc-devops-traefik_server_4 ... done
+Creating poc-devops-traefik_server_5 ... done
 ```
 
 ```
 server_1  | Server running on port 3000
-server_3  | Server running on port 3000
-server_4  | Server running on port 3000
 server_2  | Server running on port 3000
+server_3  | Server running on port 3000
 server_5  | Server running on port 3000
-server_2  | 2020-05-02T18:39:43.017Z: Request received
-server_4  | 2020-05-02T18:39:43.019Z: Request received
-server_3  | 2020-05-02T18:39:43.020Z: Request received
-server_2  | 2020-05-02T18:39:43.046Z: Request received
-server_4  | 2020-05-02T18:39:43.047Z: Request received
-server_4  | 2020-05-02T18:39:43.047Z: Request received
-server_4  | 2020-05-02T18:39:43.048Z: Request received
-server_4  | 2020-05-02T18:39:43.049Z: Request received
-server_2  | 2020-05-02T18:39:43.049Z: Request received
-server_4  | 2020-05-02T18:39:43.050Z: Request received
+server_4  | Server running on port 3000
 ```
 
 ## Tests
@@ -99,19 +87,19 @@ Running 30s test @ http://localhost:4000
 ┌─────────┬──────┬──────┬───────┬───────┬─────────┬─────────┬──────────┐
 │ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%   │ Avg     │ Stdev   │ Max      │
 ├─────────┼──────┼──────┼───────┼───────┼─────────┼─────────┼──────────┤
-│ Latency │ 0 ms │ 3 ms │ 11 ms │ 14 ms │ 3.97 ms │ 2.98 ms │ 67.14 ms │
+│ Latency │ 0 ms │ 2 ms │ 8 ms  │ 10 ms │ 2.58 ms │ 2.23 ms │ 75.02 ms │
 └─────────┴──────┴──────┴───────┴───────┴─────────┴─────────┴──────────┘
-┌───────────┬────────┬────────┬────────┬─────────┬────────┬────────┬────────┐
-│ Stat      │ 1%     │ 2.5%   │ 50%    │ 97.5%   │ Avg    │ Stdev  │ Min    │
-├───────────┼────────┼────────┼────────┼─────────┼────────┼────────┼────────┤
-│ Req/Sec   │ 3531   │ 3531   │ 7003   │ 7255    │ 6711.9 │ 769.84 │ 3531   │
-├───────────┼────────┼────────┼────────┼─────────┼────────┼────────┼────────┤
-│ Bytes/Sec │ 502 kB │ 502 kB │ 994 kB │ 1.03 MB │ 953 kB │ 109 kB │ 501 kB │
-└───────────┴────────┴────────┴────────┴─────────┴────────┴────────┴────────┘
+┌───────────┬────────┬────────┬─────────┬─────────┬─────────┬────────┬────────┐
+│ Stat      │ 1%     │ 2.5%   │ 50%     │ 97.5%   │ Avg     │ Stdev  │ Min    │
+├───────────┼────────┼────────┼─────────┼─────────┼─────────┼────────┼────────┤
+│ Req/Sec   │ 5259   │ 5259   │ 9975    │ 10143   │ 9730.6  │ 888.55 │ 5259   │
+├───────────┼────────┼────────┼─────────┼─────────┼─────────┼────────┼────────┤
+│ Bytes/Sec │ 747 kB │ 747 kB │ 1.42 MB │ 1.44 MB │ 1.38 MB │ 126 kB │ 747 kB │
+└───────────┴────────┴────────┴─────────┴─────────┴─────────┴────────┴────────┘
 
 Req/Bytes counts sampled once per second.
 
-201k requests in 30.05s, 28.6 MB read
+292k requests in 30.05s, 41.5 MB read
 ```
 
 ### 5 containers
@@ -120,22 +108,22 @@ Req/Bytes counts sampled once per second.
 Running 30s test @ http://localhost:4000
 30 connections
 
-┌─────────┬──────┬──────┬───────┬───────┬─────────┬────────┬──────────┐
-│ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%   │ Avg     │ Stdev  │ Max      │
-├─────────┼──────┼──────┼───────┼───────┼─────────┼────────┼──────────┤
-│ Latency │ 1 ms │ 4 ms │ 15 ms │ 19 ms │ 5.01 ms │ 3.7 ms │ 64.97 ms │
-└─────────┴──────┴──────┴───────┴───────┴─────────┴────────┴──────────┘
-┌───────────┬────────┬────────┬────────┬────────┬─────────┬─────────┬────────┐
-│ Stat      │ 1%     │ 2.5%   │ 50%    │ 97.5%  │ Avg     │ Stdev   │ Min    │
-├───────────┼────────┼────────┼────────┼────────┼─────────┼─────────┼────────┤
-│ Req/Sec   │ 3101   │ 3101   │ 5679   │ 6199   │ 5451.44 │ 681.63  │ 3101   │
-├───────────┼────────┼────────┼────────┼────────┼─────────┼─────────┼────────┤
-│ Bytes/Sec │ 441 kB │ 441 kB │ 806 kB │ 880 kB │ 774 kB  │ 96.8 kB │ 440 kB │
-└───────────┴────────┴────────┴────────┴────────┴─────────┴─────────┴────────┘
+┌─────────┬──────┬──────┬───────┬───────┬─────────┬─────────┬──────────┐
+│ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%   │ Avg     │ Stdev   │ Max      │
+├─────────┼──────┼──────┼───────┼───────┼─────────┼─────────┼──────────┤
+│ Latency │ 0 ms │ 2 ms │ 10 ms │ 13 ms │ 2.97 ms │ 2.82 ms │ 71.33 ms │
+└─────────┴──────┴──────┴───────┴───────┴─────────┴─────────┴──────────┘
+┌───────────┬────────┬────────┬─────────┬─────────┬─────────┬─────────┬────────┐
+│ Stat      │ 1%     │ 2.5%   │ 50%     │ 97.5%   │ Avg     │ Stdev   │ Min    │
+├───────────┼────────┼────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│ Req/Sec   │ 4531   │ 4531   │ 9079    │ 9303    │ 8652.94 │ 1074.77 │ 4531   │
+├───────────┼────────┼────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│ Bytes/Sec │ 644 kB │ 644 kB │ 1.29 MB │ 1.32 MB │ 1.23 MB │ 153 kB  │ 643 kB │
+└───────────┴────────┴────────┴─────────┴─────────┴─────────┴─────────┴────────┘
 
 Req/Bytes counts sampled once per second.
 
-164k requests in 30.05s, 23.2 MB read
+260k requests in 30.05s, 36.9 MB read
 ```
 
 ### 10 containers
@@ -144,20 +132,20 @@ Req/Bytes counts sampled once per second.
 Running 30s test @ http://localhost:4000
 30 connections
 
-┌─────────┬──────┬──────┬───────┬───────┬─────────┬────────┬──────────┐
-│ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%   │ Avg     │ Stdev  │ Max      │
-├─────────┼──────┼──────┼───────┼───────┼─────────┼────────┼──────────┤
-│ Latency │ 1 ms │ 5 ms │ 17 ms │ 23 ms │ 5.81 ms │ 4.5 ms │ 97.56 ms │
-└─────────┴──────┴──────┴───────┴───────┴─────────┴────────┴──────────┘
-┌───────────┬────────┬────────┬────────┬────────┬─────────┬─────────┬────────┐
-│ Stat      │ 1%     │ 2.5%   │ 50%    │ 97.5%  │ Avg     │ Stdev   │ Min    │
-├───────────┼────────┼────────┼────────┼────────┼─────────┼─────────┼────────┤
-│ Req/Sec   │ 2645   │ 2645   │ 5071   │ 5395   │ 4760.47 │ 660.93  │ 2644   │
-├───────────┼────────┼────────┼────────┼────────┼─────────┼─────────┼────────┤
-│ Bytes/Sec │ 376 kB │ 376 kB │ 720 kB │ 766 kB │ 676 kB  │ 93.9 kB │ 375 kB │
-└───────────┴────────┴────────┴────────┴────────┴─────────┴─────────┴────────┘
+┌─────────┬──────┬──────┬───────┬───────┬─────────┬─────────┬──────────┐
+│ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%   │ Avg     │ Stdev   │ Max      │
+├─────────┼──────┼──────┼───────┼───────┼─────────┼─────────┼──────────┤
+│ Latency │ 0 ms │ 3 ms │ 12 ms │ 16 ms │ 3.44 ms │ 3.31 ms │ 88.66 ms │
+└─────────┴──────┴──────┴───────┴───────┴─────────┴─────────┴──────────┘
+┌───────────┬────────┬────────┬─────────┬─────────┬─────────┬─────────┬────────┐
+│ Stat      │ 1%     │ 2.5%   │ 50%     │ 97.5%   │ Avg     │ Stdev   │ Min    │
+├───────────┼────────┼────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│ Req/Sec   │ 3755   │ 3755   │ 8083    │ 8495    │ 7619.7  │ 1123.78 │ 3754   │
+├───────────┼────────┼────────┼─────────┼─────────┼─────────┼─────────┼────────┤
+│ Bytes/Sec │ 534 kB │ 534 kB │ 1.15 MB │ 1.21 MB │ 1.08 MB │ 160 kB  │ 533 kB │
+└───────────┴────────┴────────┴─────────┴─────────┴─────────┴─────────┴────────┘
 
 Req/Bytes counts sampled once per second.
 
-143k requests in 30.05s, 20.3 MB read
+229k requests in 30.05s, 32.5 MB read
 ```
