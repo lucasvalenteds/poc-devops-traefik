@@ -1,13 +1,15 @@
 import * as HTTP from "http";
+import Console from "console";
+import Process from "process";
 
-const port = process.env.PORT;
+const port = Process.env.PORT;
 
 const server = HTTP.createServer((_, response) => {
   response.statusCode = 200;
   response.write(JSON.stringify({ message: "Hello World" }));
-  response.end(() => console.info("%s: Request received", new Date()));
+  response.end();
 });
 
 server
   .listen(port)
-  .once("listening", () => console.debug("Server running on port %d", port));
+  .once("listening", () => Console.debug("Server running on port %d", port));
